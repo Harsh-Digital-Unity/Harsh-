@@ -538,7 +538,605 @@
     });
   }
   document.getElementById('quizNext').addEventListener('click', loadQuestion);
-})();
+})();<!-- ==================== HARSH DIGITAL UNITY : 50 QUESTION EXAM ==================== -->
+
+<section id="examSection" class="exam-section">
+
+  <div class="exam-header">
+    <h2>📚 Harsh Digital Unity Knowledge Exam</h2>
+    <p>50 प्रश्न • Knowledge Exam • Certificate • Weekly Leaderboard</p>
+  </div>
+
+  <!-- Registration -->
+  <div id="examRegistration" class="exam-card">
+    <h3>📝 Exam Registration</h3>
+
+    <input id="firstName" type="text" placeholder="First Name" required>
+    <input id="lastName" type="text" placeholder="Last Name" required>
+    <input id="fatherName" type="text" placeholder="Father's Name" required>
+
+    <select id="state" required>
+      <option value="">Select Your State / UT</option>
+      <option>Andhra Pradesh</option>
+      <option>Arunachal Pradesh</option>
+      <option>Assam</option>
+      <option>Bihar</option>
+      <option>Chhattisgarh</option>
+      <option>Goa</option>
+      <option>Gujarat</option>
+      <option>Haryana</option>
+      <option>Himachal Pradesh</option>
+      <option>Jharkhand</option>
+      <option>Karnataka</option>
+      <option>Kerala</option>
+      <option>Madhya Pradesh</option>
+      <option>Maharashtra</option>
+      <option>Manipur</option>
+      <option>Meghalaya</option>
+      <option>Mizoram</option>
+      <option>Nagaland</option>
+      <option>Odisha</option>
+      <option>Punjab</option>
+      <option>Rajasthan</option>
+      <option>Sikkim</option>
+      <option>Tamil Nadu</option>
+      <option>Telangana</option>
+      <option>Tripura</option>
+      <option>Uttar Pradesh</option>
+      <option>Uttarakhand</option>
+      <option>West Bengal</option>
+      <option>Andaman and Nicobar Islands</option>
+      <option>Chandigarh</option>
+      <option>Dadra and Nagar Haveli and Daman and Diu</option>
+      <option>Delhi</option>
+      <option>Jammu and Kashmir</option>
+      <option>Ladakh</option>
+      <option>Lakshadweep</option>
+      <option>Puducherry</option>
+    </select>
+
+    <button id="startExamBtn" type="button">
+      Start 50 Question Exam
+    </button>
+  </div>
+
+  <!-- Exam -->
+  <div id="examBox" class="exam-card" style="display:none;">
+
+    <div class="exam-info">
+      <span id="examProgress">Question 1 / 50</span>
+      <span id="examScore">Score: 0</span>
+    </div>
+
+    <h3 id="examQuestion"></h3>
+
+    <div id="examOptions"></div>
+
+    <button id="nextExamBtn" type="button" style="display:none;">
+      Next Question →
+    </button>
+
+  </div>
+
+  <!-- Result -->
+  <div id="examResult" class="exam-card" style="display:none;">
+
+    <h2>🎉 Exam Completed!</h2>
+
+    <div class="result-number">
+      <span id="finalScore">0</span> / 50
+    </div>
+
+    <p id="resultMessage"></p>
+
+    <div class="result-details">
+      <p>Correct Answers: <b id="correctCount">0</b></p>
+      <p>Wrong Answers: <b id="wrongCount">0</b></p>
+      <p>Percentage: <b id="percentage">0%</b></p>
+    </div>
+
+    <button id="certificateBtn" type="button" style="display:none;">
+      📜 Download Knowledge Certificate
+    </button>
+
+    <p class="certificate-note">
+      यह Certificate केवल Harsh Digital Unity वेबसाइट द्वारा प्रदान किया गया
+      Knowledge/Participation Certificate है। यह किसी Government या Private
+      Sector में मान्यता प्राप्त अथवा आधिकारिक प्रमाणपत्र नहीं है।
+    </p>
+
+  </div>
+
+  <!-- Weekly Leaderboard -->
+  <div class="exam-card leaderboard-card">
+
+    <h2>🏆 Weekly Leaderboard</h2>
+    <p>इस सप्ताह के सबसे अधिक score वाले participants</p>
+
+    <table id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>State</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
+
+  </div>
+
+</section>
+
+<script>
+/* ==================== EXAM SYSTEM ==================== */
+
+/*
+  IMPORTANT:
+  यहाँ अपने website के existing knowledge/quiz questions डालो।
+  कुल EXACTLY 50 questions होने चाहिए।
+  
+  Format:
+  {
+    q: "Question",
+    options: ["Option A", "Option B", "Option C", "Option D"],
+    answer: 0
+  }
+
+  answer में:
+  0 = पहला option
+  1 = दूसरा option
+  2 = तीसरा option
+  3 = चौथा option
+*/
+
+const examQuestions = [
+
+  {
+    q: "भारत के संविधान के प्रमुख शिल्पकार के रूप में किसे जाना जाता है?",
+    options: [
+      "डॉ. बी. आर. अंबेडकर",
+      "महात्मा गांधी",
+      "जवाहरलाल नेहरू",
+      "सरदार पटेल"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "डॉ. बी. आर. अंबेडकर का जन्म किस तारीख को हुआ था?",
+    options: [
+      "14 अप्रैल 1891",
+      "15 अगस्त 1890",
+      "26 जनवरी 1891",
+      "6 दिसंबर 1891"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "गौतम बुद्ध का बचपन का नाम क्या था?",
+    options: [
+      "सिद्धार्थ",
+      "राहुल",
+      "आनंद",
+      "अशोक"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "संत रविदास जी किस बात के लिए विशेष रूप से जाने जाते हैं?",
+    options: [
+      "समानता और भक्ति के संदेश के लिए",
+      "राजनीतिक शासन के लिए",
+      "व्यापार के लिए",
+      "युद्ध के लिए"
+    ],
+    answer: 0
+  }
+
+  /* यहाँ बाकी प्रश्न जोड़कर कुल 50 प्रश्न करो */
+];
+
+
+/* ---------- Registration ---------- */
+
+let examUser = {
+  firstName: "",
+  lastName: "",
+  fatherName: "",
+  state: ""
+};
+
+let currentQuestion = 0;
+let examScore = 0;
+let examAnswers = [];
+
+const startExamBtn = document.getElementById("startExamBtn");
+
+startExamBtn.addEventListener("click", function () {
+
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const fatherName = document.getElementById("fatherName").value.trim();
+  const state = document.getElementById("state").value;
+
+  if (!firstName || !lastName || !fatherName || !state) {
+    alert("कृपया सभी registration details भरें।");
+    return;
+  }
+
+  if (examQuestions.length !== 50) {
+    alert("Exam में exactly 50 questions होने चाहिए।");
+    return;
+  }
+
+  examUser = {
+    firstName,
+    lastName,
+    fatherName,
+    state
+  };
+
+  currentQuestion = 0;
+  examScore = 0;
+  examAnswers = [];
+
+  document.getElementById("examRegistration").style.display = "none";
+  document.getElementById("examBox").style.display = "block";
+
+  loadExamQuestion();
+});
+
+
+/* ---------- Load Question ---------- */
+
+function loadExamQuestion() {
+
+  const item = examQuestions[currentQuestion];
+
+  document.getElementById("examProgress").textContent =
+    `Question ${currentQuestion + 1} / 50`;
+
+  document.getElementById("examScore").textContent =
+    `Score: ${examScore}`;
+
+  document.getElementById("examQuestion").textContent = item.q;
+
+  const optionsBox = document.getElementById("examOptions");
+  optionsBox.innerHTML = "";
+
+  item.options.forEach(function(option, index) {
+
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "exam-option";
+    button.textContent = option;
+
+    button.addEventListener("click", function() {
+      selectExamAnswer(index, button);
+    });
+
+    optionsBox.appendChild(button);
+  });
+
+  document.getElementById("nextExamBtn").style.display = "none";
+}
+
+
+/* ---------- Answer ---------- */
+
+function selectExamAnswer(selectedIndex, clickedButton) {
+
+  const item = examQuestions[currentQuestion];
+
+  const allButtons =
+    document.querySelectorAll(".exam-option");
+
+  allButtons.forEach(btn => {
+    btn.disabled = true;
+  });
+
+  const isCorrect = selectedIndex === item.answer;
+
+  if (isCorrect) {
+    examScore++;
+    clickedButton.classList.add("correct-answer");
+  } else {
+
+    clickedButton.classList.add("wrong-answer");
+
+    allButtons[item.answer].classList.add("correct-answer");
+  }
+
+  examAnswers.push({
+    question: item.q,
+    selected: selectedIndex,
+    correct: item.answer,
+    isCorrect
+  });
+
+  document.getElementById("examScore").textContent =
+    `Score: ${examScore}`;
+
+  const nextBtn = document.getElementById("nextExamBtn");
+
+  nextBtn.style.display = "block";
+
+  if (currentQuestion === 49) {
+    nextBtn.textContent = "Finish Exam";
+  } else {
+    nextBtn.textContent = "Next Question →";
+  }
+}
+
+
+/* ---------- Next Question ---------- */
+
+document.getElementById("nextExamBtn")
+.addEventListener("click", function() {
+
+  if (currentQuestion === 49) {
+    finishExam();
+    return;
+  }
+
+  currentQuestion++;
+  loadExamQuestion();
+});
+
+
+/* ---------- Finish Exam ---------- */
+
+function finishExam() {
+
+  document.getElementById("examBox").style.display = "none";
+  document.getElementById("examResult").style.display = "block";
+
+  const wrong = 50 - examScore;
+  const percentage = (examScore / 50) * 100;
+
+  document.getElementById("finalScore").textContent =
+    examScore;
+
+  document.getElementById("correctCount").textContent =
+    examScore;
+
+  document.getElementById("wrongCount").textContent =
+    wrong;
+
+  document.getElementById("percentage").textContent =
+    percentage.toFixed(2) + "%";
+
+
+  /*
+    Certificate rule:
+    20 या उससे ज्यादा सही answers = Knowledge Certificate
+  */
+
+  const certificateBtn =
+    document.getElementById("certificateBtn");
+
+  if (examScore >= 20) {
+
+    certificateBtn.style.display = "inline-block";
+
+    document.getElementById("resultMessage").textContent =
+      "बधाई! आपने Knowledge Certificate के लिए आवश्यक score प्राप्त किया है।";
+
+    certificateBtn.onclick = generateCertificate;
+
+  } else {
+
+    certificateBtn.style.display = "none";
+
+    document.getElementById("resultMessage").textContent =
+      "आपका score certificate के लिए अभी पर्याप्त नहीं है। आप फिर से प्रयास कर सकते हैं।";
+  }
+
+  saveWeeklyLeaderboard();
+  showLeaderboard();
+}
+
+
+/* ---------- Certificate ---------- */
+
+function generateCertificate() {
+
+  const fullName =
+    `${examUser.firstName} ${examUser.lastName}`;
+
+  const certificateHTML = `
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title>Harsh Digital Unity Knowledge Certificate</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef6ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.certificate {
+  width: 900px;
+  max-width: 90%;
+  padding: 60px;
+  background: white;
+  border: 10px solid #0b4ea2;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,.15);
+}
+
+h1 {
+  color: #0b4ea2;
+  font-size: 42px;
+}
+
+h2 {
+  color: #222;
+}
+
+.name {
+  font-size: 34px;
+  font-weight: bold;
+  margin: 30px;
+}
+
+.score {
+  font-size: 25px;
+}
+
+.note {
+  margin-top: 35px;
+  font-size: 14px;
+  color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="certificate">
+
+  <h1>HARSH DIGITAL UNITY</h1>
+
+  <h2>Knowledge Certificate</h2>
+
+  <p>This certificate is proudly presented to</p>
+
+  <div class="name">${fullName}</div>
+
+  <p class="score">
+    For successfully participating in the
+    Harsh Digital Unity Knowledge Exam
+  </p>
+
+  <h2>Score: ${examScore} / 50</h2>
+
+  <p>State: ${examUser.state}</p>
+
+  <div class="note">
+    यह Certificate केवल Knowledge/Participation के उद्देश्य से
+    Harsh Digital Unity वेबसाइट द्वारा प्रदान किया गया है।
+    यह किसी Government या Private Sector में मान्यता प्राप्त
+    अथवा आधिकारिक प्रमाणपत्र नहीं है।
+  </div>
+
+</div>
+
+<script>
+window.print();
+<\/script>
+
+</body>
+</html>
+`;
+
+  const certificateWindow =
+    window.open("", "_blank");
+
+  certificateWindow.document.write(certificateHTML);
+  certificateWindow.document.close();
+}
+
+
+/* ---------- Weekly Leaderboard ---------- */
+
+function getWeekKey() {
+
+  const now = new Date();
+
+  const firstDay =
+    new Date(now.getFullYear(), 0, 1);
+
+  const days =
+    Math.floor((now - firstDay) / 86400000);
+
+  const week =
+    Math.ceil((days + firstDay.getDay() + 1) / 7);
+
+  return `${now.getFullYear()}-W${week}`;
+}
+
+
+function saveWeeklyLeaderboard() {
+
+  const weekKey = getWeekKey();
+
+  let leaderboard =
+    JSON.parse(
+      localStorage.getItem("harshDigitalLeaderboard")
+    ) || {};
+
+  if (!leaderboard[weekKey]) {
+    leaderboard[weekKey] = [];
+  }
+
+  leaderboard[weekKey].push({
+    name: `${examUser.firstName} ${examUser.lastName}`,
+    state: examUser.state,
+    score: examScore
+  });
+
+  leaderboard[weekKey].sort(
+    (a, b) => b.score - a.score
+  );
+
+  leaderboard[weekKey] =
+    leaderboard[weekKey].slice(0, 10);
+
+  localStorage.setItem(
+    "harshDigitalLeaderboard",
+    JSON.stringify(leaderboard)
+  );
+}
+
+
+function showLeaderboard() {
+
+  const weekKey = getWeekKey();
+
+  const leaderboard =
+    JSON.parse(
+      localStorage.getItem("harshDigitalLeaderboard")
+    ) || {};
+
+  const data =
+    leaderboard[weekKey] || [];
+
+  const body =
+    document.getElementById("leaderboardBody");
+
+  body.innerHTML = "";
+
+  data.forEach(function(user, index) {
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${user.name}</td>
+      <td>${user.state}</td>
+      <td>${user.score}/50</td>
+    `;
+
+    body.appendChild(row);
+  });
+}
+
+showLeaderboard();
+
+</script>
 </script>
 </body>
 </html>
