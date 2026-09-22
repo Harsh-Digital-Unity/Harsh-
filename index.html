@@ -1136,7 +1136,96 @@ function showLeaderboard() {
 
 showLeaderboard();
 
-</script>
+</script>.exam-section {
+  padding: 50px 20px;
+  background: #eef6ff;
+}
+
+.exam-header,
+.exam-card {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+.exam-header {
+  text-align: center;
+  background: #0b4ea2;
+  color: white;
+}
+
+.exam-card input,
+.exam-card select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.exam-card button {
+  padding: 13px 20px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #0b4ea2;
+  color: white;
+  font-size: 16px;
+}
+
+.exam-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #f5f8fc !important;
+  color: #222 !important;
+  border: 1px solid #ddd !important;
+}
+
+.exam-option:hover {
+  background: #e8f1ff !important;
+}
+
+.correct-answer {
+  background: #168a45 !important;
+  color: white !important;
+}
+
+.wrong-answer {
+  background: #c62828 !important;
+  color: white !important;
+}
+
+.exam-info {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+#leaderboardTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#leaderboardTable th,
+#leaderboardTable td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.certificate-note {
+  font-size: 13px;
+  color: #666;
+  margin-top: 20px;
+}
 </script>
 </body>
 </html>
