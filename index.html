@@ -258,6 +258,25 @@
   .power-score{font-weight:700;color:var(--blue);margin-top:10px}
   @media(max-width:760px){.games-grid{grid-template-columns:1fr}.game-options{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(4,1fr)}}
 
+
+/* Universal AI Assistant */
+.universal-ai-section{padding:56px 0;background:linear-gradient(135deg,rgba(18,41,122,.06),rgba(242,178,51,.08));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.universal-ai-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 12px 35px rgba(18,41,122,.10)}
+.universal-ai-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.universal-ai-head h2{margin:0 0 6px}
+.universal-ai-head p{margin:0;color:var(--muted)}
+.ai-key-box{display:grid;grid-template-columns:1fr auto;gap:10px;margin:18px 0 12px}
+.ai-key-box input{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+.ai-chat{min-height:180px;max-height:520px;overflow:auto;display:grid;gap:12px;padding:6px 2px}
+.ai-bubble{padding:12px 15px;border-radius:16px;line-height:1.65;white-space:pre-wrap}
+.ai-user-bubble{justify-self:end;background:#0b4ea2;color:#fff;max-width:88%}
+.ai-bot-bubble{justify-self:start;background:var(--bg);border:1px solid var(--line);max-width:92%}
+.ai-input-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;margin-top:12px}
+.ai-input-row textarea{min-height:52px;max-height:160px;resize:vertical;width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit}
+.ai-small{font-size:.86rem;color:var(--muted);margin:10px 0 0}
+.ai-status{padding:9px 12px;border-radius:10px;background:var(--bg);color:var(--muted);margin:10px 0}
+@media(max-width:650px){.ai-key-box,.ai-input-row{grid-template-columns:1fr}.universal-ai-card{padding:16px}}
+
 </style>
 </head>
 <body>
@@ -572,6 +591,39 @@
       <div id="assistantMessages" class="assistant-messages" aria-live="polite"></div>
       <div class="assistant-input-row"><input id="assistantInput" type="text" placeholder="जैसे: अनुच्छेद 21 क्या है?" autocomplete="off"><button id="assistantAsk" class="btn btn-gold" type="button">पूछें</button></div>
       <small>नोट: यह single-file version browser speech recognition + built-in site knowledge पर चलता है। General-purpose AI के लिए secure server/API connection बाद में जोड़ा जा सकता है; API key HTML में नहीं रखनी चाहिए।</small>
+    </div>
+  </div>
+</section>
+
+
+<!-- Universal AI Assistant -->
+<section class="universal-ai-section" id="universal-ai">
+  <div class="wrap">
+    <div class="universal-ai-card">
+      <div class="universal-ai-head">
+        <div>
+          <h2>🤖 Universal AI Assistant</h2>
+          <p>भारत या दुनिया के किसी भी विषय पर सवाल पूछें। यह वेबसाइट के सीमित ज्ञान तक ही बंधा नहीं है।</p>
+        </div>
+        <button class="btn btn-blue" id="aiClear" type="button">नई चैट</button>
+      </div>
+
+      <div class="ai-key-box">
+        <input id="aiApiKey" type="password" autocomplete="off" placeholder="अपनी Gemini API Key यहाँ डालें">
+        <button class="btn btn-gold" id="aiSaveKey" type="button">Key Save</button>
+      </div>
+      <div class="ai-status" id="aiStatus">पहली बार उपयोग करने पर अपनी Gemini API Key डालें। Key इसी browser में local storage में रखी जाएगी।</div>
+
+      <div class="ai-chat" id="aiChat" aria-live="polite">
+        <div class="ai-bubble ai-bot-bubble">नमस्ते! मैं Harsh Digital Unity का AI Assistant हूँ। आप इतिहास, संविधान, पढ़ाई, टेक्नोलॉजी, सामान्य ज्ञान या किसी भी दूसरे विषय पर सवाल पूछ सकते हैं।</div>
+      </div>
+
+      <div class="ai-input-row">
+        <textarea id="aiQuestion" placeholder="अपना सवाल लिखें… (Enter = भेजें, Shift+Enter = नई लाइन)"></textarea>
+        <button class="btn btn-blue" id="aiMic" type="button">🎙️</button>
+        <button class="btn btn-gold" id="aiSend" type="button">पूछें ➜</button>
+      </div>
+      <p class="ai-small">नोट: यह सामान्य-purpose AI है। महत्वपूर्ण कानूनी, चिकित्सा या वित्तीय जानकारी को आधिकारिक स्रोत से भी जाँचें।</p>
     </div>
   </div>
 </section>
@@ -1411,6 +1463,150 @@ body{margin:0;background:#e9eef5;font-family:Georgia,"Times New Roman",serif;col
   <div class="disclaimer">यह केवल Harsh Digital Unity वेबसाइट द्वारा शैक्षणिक/डेमो उद्देश्य से बनाया गया प्रमाणपत्र है। यह कोई सरकारी, आधिकारिक या मान्यता-प्राप्त प्रमाणपत्र नहीं है।</div>
 </div>
 <div class="actions"><button onclick="window.print()">🖨️ Print / Save as PDF</button><button onclick="window.close()">Close</button></div>
+
+<script>
+/* Universal AI Assistant - Gemini REST API */
+(function(){
+  const keyEl = document.getElementById('aiApiKey');
+  const saveEl = document.getElementById('aiSaveKey');
+  const sendEl = document.getElementById('aiSend');
+  const clearEl = document.getElementById('aiClear');
+  const micEl = document.getElementById('aiMic');
+  const qEl = document.getElementById('aiQuestion');
+  const chatEl = document.getElementById('aiChat');
+  const statusEl = document.getElementById('aiStatus');
+  if(!keyEl || !sendEl) return;
+
+  const STORAGE_KEY = 'hdu_gemini_api_key_v1';
+  const MODEL = 'gemini-2.5-flash';
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved) {
+    keyEl.value = saved;
+    statusEl.textContent = 'API Key saved. अब आप सीधे सवाल पूछ सकते हैं।';
+  }
+
+  function addBubble(text, cls){
+    const div = document.createElement('div');
+    div.className = 'ai-bubble ' + cls;
+    div.textContent = text;
+    chatEl.appendChild(div);
+    chatEl.scrollTop = chatEl.scrollHeight;
+    return div;
+  }
+
+  saveEl.addEventListener('click', function(){
+    const key = keyEl.value.trim();
+    if(!key){
+      localStorage.removeItem(STORAGE_KEY);
+      statusEl.textContent = 'Saved key हटाई गई।';
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY, key);
+    statusEl.textContent = 'API Key इसी browser में save हो गई।';
+  });
+
+  clearEl.addEventListener('click', function(){
+    chatEl.innerHTML = '<div class="ai-bubble ai-bot-bubble">नई चैट शुरू हो गई। अपना सवाल पूछें।</div>';
+    qEl.value = '';
+  });
+
+  async function askAI(){
+    const question = qEl.value.trim();
+    const apiKey = keyEl.value.trim();
+    if(!question) return;
+    if(!apiKey){
+      statusEl.textContent = 'पहले Gemini API Key डालें और Save करें।';
+      keyEl.focus();
+      return;
+    }
+
+    addBubble(question, 'ai-user-bubble');
+    qEl.value = '';
+    sendEl.disabled = true;
+    statusEl.textContent = 'AI जवाब तैयार कर रहा है…';
+    const thinking = addBubble('सोच रहा हूँ…', 'ai-bot-bubble');
+
+    try {
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/' +
+                  encodeURIComponent(MODEL) + ':generateContent?key=' +
+                  encodeURIComponent(apiKey);
+
+      const systemInstruction =
+        'You are the Universal AI Assistant inside Harsh Digital Unity website. ' +
+        'Answer the user directly and helpfully on general topics from India and around the world. ' +
+        'Do not pretend to have live web access unless the user provides current information. ' +
+        'For current events, prices, laws, or changing facts, clearly say that the information should be verified from an official/current source. ' +
+        'Reply in the same language as the user when possible. Keep answers clear and practical.';
+
+      const body = {
+        systemInstruction: {parts:[{text:systemInstruction}]},
+        contents: [{role:'user', parts:[{text:question}]}],
+        generationConfig: {temperature:0.4, maxOutputTokens:1200}
+      };
+
+      const res = await fetch(url, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+
+      const data = await res.json();
+      if(!res.ok){
+        throw new Error(data && data.error && data.error.message ? data.error.message : 'AI request failed');
+      }
+
+      const answer = data.candidates &&
+                     data.candidates[0] &&
+                     data.candidates[0].content &&
+                     data.candidates[0].content.parts &&
+                     data.candidates[0].content.parts.map(function(p){return p.text || '';}).join('').trim();
+
+      if(!answer) throw new Error('AI ने कोई उत्तर नहीं लौटाया।');
+      thinking.textContent = answer;
+      statusEl.textContent = 'जवाब मिल गया।';
+      if('speechSynthesis' in window && window.__hduAutoRead){
+        const u = new SpeechSynthesisUtterance(answer);
+        u.lang = /[\u0900-\u097F]/.test(answer) ? 'hi-IN' : 'en-IN';
+        window.speechSynthesis.speak(u);
+      }
+    } catch(err) {
+      thinking.textContent =
+        'AI से जवाब नहीं मिल पाया।\\n\\n' +
+        'संभावित कारण: API Key गलत है, API access बंद है, internet/API limit की समस्या है, या चुना हुआ model उपलब्ध नहीं है।\\n\\n' +
+        'Error: ' + err.message;
+      statusEl.textContent = 'AI request में समस्या आई।';
+    } finally {
+      sendEl.disabled = false;
+    }
+  }
+
+  sendEl.addEventListener('click', askAI);
+  qEl.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      askAI();
+    }
+  });
+
+  if('SpeechRecognition' in window || 'webkitSpeechRecognition' in window){
+    micEl.addEventListener('click', function(){
+      const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const r = new R();
+      r.lang = 'hi-IN';
+      r.interimResults = false;
+      r.onstart = function(){statusEl.textContent='सुन रहा हूँ… बोलिए।'; micEl.textContent='🔴';};
+      r.onresult = function(e){qEl.value = e.results[0][0].transcript;};
+      r.onerror = function(){statusEl.textContent='Voice input नहीं चल पाया।';};
+      r.onend = function(){micEl.textContent='🎙️';};
+      r.start();
+    });
+  } else {
+    micEl.disabled = true;
+    micEl.title = 'इस browser में voice input उपलब्ध नहीं है';
+  }
+})();
+</script>
+
 </body></html>`;
   const certificateWindow=window.open('', '_blank');
   if(!certificateWindow){ alert('Certificate window browser ने block कर दी है। कृपया pop-up allow करें।'); return; }
